@@ -5,6 +5,7 @@ import { useDNSRecords } from "../../hooks/useQueries";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import { Button } from "reactstrap";
+import { DataTableToolBar } from "./data-table-toolbar";
 
 const columns = [
   {
@@ -70,6 +71,7 @@ const DataGrid = () => {
 
   return (
     <div className="container mx-auto py-10">
+	<DataTableToolBar />
       <DataTable 
 	  	title="DNS Records"
 		columns={columns}
