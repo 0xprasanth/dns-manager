@@ -3,6 +3,7 @@ import { useAuthContext } from "../hooks/useAuthContext"
 import { useRoutes, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
+import Dashboard from '../pages/Dashboard';
 
 
 function Router() {
@@ -33,7 +34,7 @@ function Router() {
         },
         {
             path: "/dashboard",
-            element: isLoggedIn ? <>Dashabord</> : <Navigate to={"/login"} />
+            element: isLoggedIn ? <Dashboard /> : <Navigate to={"/login"} />
         }
     ])
 }
