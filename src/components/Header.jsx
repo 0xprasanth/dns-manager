@@ -43,9 +43,15 @@ const Header = () => {
 
         <div className="flex gap-4 items-center">
             <UncontrolledDropdown>
-                <DropdownToggle caret color="dark">
+                <DropdownToggle color='white' >
                     {/* <Power /> */}
-                    <img src='../assets/power.svg' />
+                    <img
+                     src='https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/power.svg'
+                     width={30}
+                     height={30}
+                     alt='logout-svg'
+                     className="overflow-hidden object-cover round full"
+                     />
                 </DropdownToggle>
                 <DropdownMenu dark>
                     <DropdownItem onClick={handleLogout}>
