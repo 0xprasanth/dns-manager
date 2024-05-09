@@ -1,64 +1,123 @@
 import { toast } from "sonner";
-import React from "react";
-import { Row, Container, Col, CardBody } from "react-bootstrap";
-import { Card, Form, FloatingLabel, CardHeader, CardTitle } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+} from "reactstrap";
+import { useNavigate, Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const LoginPage = () => {
-    const {login } = useAuth();
-    const navigate = useNavigate();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-    const [values, setValues] = useState<{ email, password }>({
-      email: "",
-      password: "",
-    });
-  
-    const handleChange =
-      (prop) => (e) => {
-        setValues({ ...values, [prop]: e.target.value });
-      };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      if (!values.email || !values.password) {
-        return;
-      }
-  
-      await login(values.email, values.password);
-  
-      toast.success("Loggedin successfully");
-  
-      navigate("/dashboard");
-    };
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
 
+  const handleChange = (prop) => (e) => {
+    setValues({ ...values, [prop]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!values.email || !values.password) {
+      return;
+    }
+
+    await login(values.email, values.password);
+
+    toast.success("Loggedin successfully");
+
+    navigate("/dashboard");
+  };
   return (
-    <div className="absolute inset-0 flex items-center justify-center flex-col gap-4">
-        <div className="w-full p-2 text-2xl bg-slate-200/20 shadow-sm font-bold tracking-tighter capitalize fixed top-0 flex items-start">
-            DNS Manager
-        </div>
-        <CardHeader className="w-full max-w-sm">
-            <CardTitle className="text-2xl"> Login</CardTitle>
-            <CardBody>Enter Email and Password</CardBody>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-            <CardBody className="grid gap-4">
+    <>
+      <Container className="">
+        <Row style={{marginTop:"130px"}}>
+          <Card className="w-full max-w-sm">
+            <CardHeader>
+              <CardTitle className="text-2xl">Login</CardTitle>
+            </CardHeader>
+            <form onSubmit={handleSubmit}>
+              <CardBody className="grid gap-4">
                 <div className="grid gap-2">
-                    <label htmlFor="email">Email</label>
-                    <input 
-                        id="email"
-                        type="email"
-                        placeholder="m@example.com"
-                        value={values.email}
-                        // onChange={handleChange("email")}
-                    />
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    value={values.email}
+                    onChange={handleChange("email")}
+                    required
+                  />
                 </div>
-            </CardBody>
-        </form>
-        
-
-    </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="password"
+                    value={values.password}
+                    onChange={handleChange("password")}
+                    required
+                  />
+                </div>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!values.email || !values.password}
+                  color="primary"
+                >
+                  Sign in
+                </Button>
+              </CardFooter>
+              <div className="pb-6 text-center text-sm">
+                Don't have an account?{" "}
+                <Link to="/signup" className="underline">
+                  Sign up
+                </Link>
+              </div>
+            </form>
+          </Card>
+        </Row>
+      </Container>
+    </>
   );
 };
 
 export default LoginPage;
+
+/**
+ * <Col
+      className="bg-light border"
+      md={{
+        offset: 3,
+        size: 6
+      }}
+      sm="12"
+    >
+      .col-sm-12 .col-md-6 .offset-md-3
+    </Col>
+ */
+
+// const LoginForm = ({ handleChange, handleSubmit}) => {
+//   return (
+
+//   );
+// };

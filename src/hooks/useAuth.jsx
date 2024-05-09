@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useAuthContext } from "@/hooks/useAuthContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const useAuth = () => {
   const { handleLoggedIn } = useAuthContext();
