@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -40,7 +41,9 @@ const LoginPage = () => {
 
     const data = await login(values.email, values.password);
     console.log(data);
-    document.cookie = `token=${data.accesstoken}`
+    // document.cookie = `token=${data.accesstoken}`
+    Cookies.set("token", data.accesstoken, { expires: 7 });
+
     toast.success("Loggedin successfully");
 
     navigate("/dashboard");
