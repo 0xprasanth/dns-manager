@@ -1,9 +1,18 @@
-import React from 'react'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthContext, AuthContextProvider } from "./context/AuthContext";
+import { Toaster, toast } from "sonner";
+import Router from "./routes";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <BrowserRouter>
+      <AuthContextProvider>
+        <Router />
+        <Toaster />
+      </AuthContextProvider>
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
