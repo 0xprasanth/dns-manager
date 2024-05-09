@@ -2,6 +2,7 @@ import React from 'react'
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useRoutes, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
+import SignupPage from '../pages/SignupPage';
 
 
 function Router() {
@@ -27,7 +28,7 @@ function Router() {
             element: isLoggedIn ? (
                 <Navigate to="/dashboard" replace />
             ) : (
-                <>SignUp</>
+                <SignupPage />
             )
         },
         {
