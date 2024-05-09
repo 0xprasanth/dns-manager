@@ -38,8 +38,9 @@ const LoginPage = () => {
       return;
     }
 
-    await login(values.email, values.password);
-
+    const data = await login(values.email, values.password);
+    console.log(data);
+    document.cookie = `token=${data.accesstoken}`
     toast.success("Loggedin successfully");
 
     navigate("/dashboard");

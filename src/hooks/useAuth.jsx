@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const useAuth = () => {
@@ -15,10 +14,9 @@ const useAuth = () => {
                 username
             }
         );
-        const token = response.data.accesstoken;
-        Cookies.set("token", token, { expires: 7 });
+        // Cookies.set("token", token, { expires: 7 });
         handleLoggedIn(true);
-
+        return response.data;
     }catch (err) {
         console.log(err);
     }
@@ -33,12 +31,13 @@ const useAuth = () => {
               password,
             }
           );
-
+          console.log(response );
           const token = response.data.acesstoken;
-          Cookies.set("token", token, {expires: 7})
+
+
           handleLoggedIn(true);
 
-          return response.data.data;
+          return response.data;
     }catch(err){
         console.log(err);
     }
