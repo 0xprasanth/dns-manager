@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
-import { DNS } from ""
+import { fetchDNSRecords } from "../apis"
+
 
 export const useDNSRecords = accessToken => {
     return useQuery({
