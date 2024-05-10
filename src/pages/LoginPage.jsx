@@ -40,13 +40,22 @@ const LoginPage = () => {
     }
 
     const data = await login(values.email, values.password);
+
     console.log(data);
-    // document.cookie = `token=${data.accesstoken}`
-    Cookies.set("token", data.accesstoken, { expires: 7 });
+    
+    if(data.status === 200){
 
-    toast.success("Loggedin successfully");
-
-    navigate("/dashboard");
+      // document.cookie = `token=${data.accesstoken}`
+      Cookies.set("token", data.accesstoken, { expires: 7 });
+      
+      toast.success("Loggedin successfully");
+      
+      navigate("/dashboard");
+    }else if(data.status === 401){
+      toast.error(data.message);
+    }else{
+      toast.error("Something went Wrong. Please try again later")
+    }
   };
   return (
     <>

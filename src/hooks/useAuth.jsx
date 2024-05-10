@@ -34,12 +34,18 @@ const useAuth = () => {
           console.log(response );
           const token = response.data.acesstoken;
 
+          console.log(response.status);
 
           handleLoggedIn(true);
 
           return response.data;
+          
     }catch(err){
-        console.log(err);
+        console.log(err.response.data.message);
+        return {
+          status: err.response.data.status,
+          message: err.response.data.message
+        }
     }
   }
   return { signup, login };
