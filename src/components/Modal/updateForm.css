@@ -68,4 +68,12 @@
     background-color: #45a049;
   }
   
-  
+  .update-button {
+    padding: 8px 12px;
+    margin-right: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #000;
+    cursor: pointer;
+    border-radius: 5px;
+  }

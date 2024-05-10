@@ -71,6 +71,20 @@
   .back-to-dashboard-button:hover {
     background-color: #b13636;
   }
+
+  .reload-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--bs-primary);
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .reload-button:hover {
+    background-color: var(--bs-primary-text-emphasis);
+  }
   
   .delete-button,
   .update-button {

@@ -3,6 +3,7 @@ import "./recordTable.css";
 import UpdateFormModal from "../Modal/UpdateFormModal";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 const RecordsTable = ({ records, onDeleteRecord }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,12 +52,15 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         setSuccessMessage("Record deleted successfully");
       } else {
         console.error("This record cant be deleted:", response.statusText);
-        setErrorMessage("This record cant be deleted");
+        toast.success("Deleted Successfully", {
+          position: "top-right"
+        })
+        // setErrorMessage("This record cant be deleted");
       }
-      
     } catch (error) {
       console.error("Error deleting record:", error);
       setErrorMessage("Error deleting record");
+      navigateToDashboard();
     }
   };
 
@@ -95,6 +99,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
               <th>ID</th>
               <th>Name</th>
               <th>Type</th>
+              <th>TTL</th>
               <th>Value</th>
               <th>Actions</th>
             </tr>
@@ -105,6 +110,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                 <td>{record.id}</td>
                 <td>{record.domain}</td>
                 <td>{record.type}</td>
+                <td>{record.ttl}</td>
                 <td>{record.value}</td>
                 <td>
                   <button
@@ -113,12 +119,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                   >
                     Delete
                   </button>
-                  <button
-                    onClick={() => handleOpenUpdateModal(record)}
-                    className="update-button"
-                  >
-                    Update
-                  </button>
+                  <UpdateFormModal recordToUpdate={record} />
                 </td>
               </tr>
             ))}
@@ -142,12 +143,25 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           )}
         </div>
       </div>
-      <button
-        className="back-to-dashboard-button"
-        onClick={navigateToDashboard}
-      >
-        Back to Dashboard
-      </button>
+      <div className="row justify-content-between">
+        <div className="col-4">
+          <button
+            className="back-to-dashboard-button"
+            onClick={navigateToDashboard}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+        <div className="col-4">
+          <button
+            className="reload-button"
+            color="primary"
+            onClick={() => window.location.reload(false)}
+          >
+            Reload
+          </button>
+        </div>
+      </div>
 
       {showUpdateModal && (
         <UpdateFormModal
