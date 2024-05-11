@@ -30,7 +30,7 @@ const useAuth = () => {
             {
               email,
               password,
-            }
+            },
           );
           console.log(response );
 
