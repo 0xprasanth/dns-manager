@@ -73,11 +73,12 @@ const Dashboard = () => {
 
         <FormModal />
 
-        <button className="view-records-button" onClick={toggleRecordsTable}>
-          View & Edit Records
-        </button>
+        <br />
 
       </div>
+
+      <br />
+        <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
 {/* 
       {showModal && <FormModal onClose={() => setShowModal()} />} */}
 
