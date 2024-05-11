@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./recordTable.css";
 import UpdateFormModal from "../Modal/UpdateFormModal";
 import axios from "axios";
@@ -14,6 +14,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const recordsPerPage = 5;
+
 
   //   console.log(records);
 
@@ -38,9 +39,10 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
 
   const handleDeleteRecord = async (record) => {
     const accessToken = Cookies.get("token").toString();
+    console.log(record);
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/domain/records/${record.id}`,
+        `${import.meta.env.VITE_API_URL}/domain/records/${record._id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -50,11 +52,16 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
 
       if (response.ok) {
         setSuccessMessage("Record deleted successfully");
+        toast.success("Deleted Successfully", {
+          position: "top-right"
+        })
       } else {
         console.error("This record cant be deleted:", response.statusText);
         toast.success("Deleted Successfully", {
           position: "top-right"
         })
+      navigateToDashboard();
+
         // setErrorMessage("This record cant be deleted");
       }
     } catch (error) {
@@ -107,7 +114,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           <tbody>
             {currentRecords.map((record, index) => (
               <tr key={index}>
-                <td>{record.id}</td>
+                <td>{record._id}</td>
                 <td>{record.domain}</td>
                 <td>{record.type}</td>
                 <td>{record.ttl}</td>

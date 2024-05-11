@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import FormModal from "../components/Modal/index";
 import RecordsTable from "../components/RecordTable/RecordTable";
@@ -35,10 +35,16 @@ const Dashboard = () => {
       // console.log(response.data);
       
       setRecords(response.data.data);
+
     } catch (error) {
       console.error("Error fetching DNS records:", error);
     }
   };
+
+  useEffect( ()=>{
+    fetchRecords();
+    
+  }, [])
 
   const handleDeleteRecord = async (recordId) => {
     try {
@@ -63,16 +69,14 @@ const Dashboard = () => {
     }
     setShowRecordsTable(!showRecordsTable);
   };
-  console.log(showModal);
+  // console.log(showModal);
   return (
     <>
     <Header />
     <hr />x
     <div className="dashboard-container">
       <div className="button-container">
-        <button onClick={() => setShowUploadJsonForm(true)}>
-          Upload JSON File
-        </button>
+        <UploadJsonForm />
 
         <FormModal />
 

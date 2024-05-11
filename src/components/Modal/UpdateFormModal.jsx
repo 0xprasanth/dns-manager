@@ -6,6 +6,7 @@ import { Form, InputGroup } from "react-bootstrap";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
+
 import Button from "react-bootstrap/Button";
 
 function UpdateFormModal({ recordToUpdate }) {
@@ -24,7 +25,7 @@ function UpdateFormModal({ recordToUpdate }) {
   const [success, setSuccess] = useState(false);
   const [placeholder, setPlaceholder] = useState("");
 
-  console.log(recordToUpdate);
+  // console.log(recordToUpdate);
   useEffect(() => {
     if (recordToUpdate) {
       setRecord({
@@ -95,16 +96,19 @@ function UpdateFormModal({ recordToUpdate }) {
         setSuccess(false);
         return;
       }
-
+ 
       const filteredRecord = {
         name: `${record.subdomain}.com`,
         type: record.type,
         value: record.value,
       };
 
-      const response = await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/dns-records/${recordToUpdate.Name}`,
-        filteredRecord
+      const response = await axios.put( `${import.meta.env.VITE_API_URL}/domain/records/${record.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
       );
       setMessage(response.data.message);
       setSuccess(true);

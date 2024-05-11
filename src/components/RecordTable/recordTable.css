@@ -7,7 +7,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 90%;
+    max-width: 95%;
     margin-top: 25px;
   }
   
@@ -30,6 +30,7 @@
   .records-table td {
     border: 1px solid #ddd;
     padding: 8px;
+    padding-right: 5px;
     text-align: left;
   }
   
