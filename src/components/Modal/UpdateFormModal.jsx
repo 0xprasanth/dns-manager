@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 
 function UpdateFormModal({ recordToUpdate }) {
   const [show, setShow] = useState(false);
@@ -20,6 +21,8 @@ function UpdateFormModal({ recordToUpdate }) {
     type: "",
     value: "",
   });
+
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
@@ -92,7 +95,7 @@ function UpdateFormModal({ recordToUpdate }) {
     e.preventDefault();
     try {
       if (!record.subdomain) {
-        setMessage("Error: domain is required");
+        toast.error("Error: domain is required", { position: "top-right"} )
         setSuccess(false);
         return;
       }
@@ -112,21 +115,20 @@ function UpdateFormModal({ recordToUpdate }) {
       );
       setMessage(response.data.message);
       setSuccess(true);
+      
+      navigate('/')
 
-      setTimeout(() => {
-        setSuccess(false);
-      }, 3000);
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setMessage("Error: DNS record already exists");
+        setMessage();
+        toast.error("Error: DNS record already exists", { position: "top-right"} )
+
       } else {
-        setMessage("Error: Unable to update DNS record");
+        toast.error("Error: Unable to update DNS record", { position: "top-right"} )
+
       }
       console.error("Error updating DNS record:", error);
-      setSuccess(false);
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
+
     }
   };
 

@@ -4,6 +4,7 @@ import UpdateFormModal from "../Modal/UpdateFormModal";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const RecordsTable = ({ records, onDeleteRecord }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,6 +13,8 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [recordToUpdate, setRecordToUpdate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
 
   const recordsPerPage = 5;
 
@@ -38,6 +41,8 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleDeleteRecord = async (record) => {
+
+    // TODO: useNavigate to '/' instead of refresh
     const accessToken = Cookies.get("token").toString();
     console.log(record);
     try {
@@ -55,25 +60,25 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         toast.success("Deleted Successfully", {
           position: "top-right"
         })
+
       } else {
         console.error("This record cant be deleted:", response.statusText);
         toast.success("Deleted Successfully", {
           position: "top-right"
         })
-      navigateToDashboard();
+        navigate('/')
 
         // setErrorMessage("This record cant be deleted");
       }
     } catch (error) {
       console.error("Error deleting record:", error);
-      setErrorMessage("Error deleting record");
-      navigateToDashboard();
-    }
-  };
+      toast.success("Error Deleting Record", {
+        position: "top-right"
+      })
+      navigate('/')
 
-  const handleOpenUpdateModal = (record) => {
-    setRecordToUpdate(record);
-    setShowUpdateModal(true);
+
+    }
   };
 
   const handleCloseUpdateModal = () => {
@@ -81,9 +86,6 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
     setShowUpdateModal(false);
   };
 
-  const navigateToDashboard = () => {
-    window.location.href = "";
-  };
 
   return (
     <div className="records-table-wrapper">
@@ -154,7 +156,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         <div className="col-4">
           <button
             className="back-to-dashboard-button"
-            onClick={navigateToDashboard}
+            onClick={() => navigate('/')}
           >
             Back to Dashboard
           </button>
@@ -163,7 +165,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           <button
             className="reload-button"
             color="primary"
-            onClick={() => window.location.reload(false)}
+            onClick={() => navigate('/') }
           >
             Reload
           </button>
