@@ -6,6 +6,7 @@ import UploadJsonForm from "../components/forms/UploadJsonForm";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../components/Header";
+import AddDomain from "../components/Modal/AddDomain";
 
 const Dashboard = () => {
 
@@ -79,6 +80,7 @@ const Dashboard = () => {
       <div className="button-container">
         <UploadJsonForm />
         <FormModal />
+        <AddDomain />
       </div>
       <br />
       <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
