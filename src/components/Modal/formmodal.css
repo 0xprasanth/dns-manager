@@ -112,3 +112,13 @@
     margin-top: 10px;
   }
   
+
+  .add-record-button{
+        padding: 10px 20px;
+    border: none;
+    background-color: var(--bs-primary);
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }

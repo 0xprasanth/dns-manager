@@ -54,7 +54,10 @@ const UploadJsonForm = ({ onClose }) => {
 
   return (
     <>
-      <button onClick={handleShow}>Upload JSON file</button>
+    <div className="button-container">
+
+      <button onClick={handleShow} className="upload-button">Upload JSON file</button>
+    </div>
 
       <Modal show={show} onHide={() => setShow(!show)}>
         <Modal.Header closeButton>

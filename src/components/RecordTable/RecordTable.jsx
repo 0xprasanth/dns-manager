@@ -5,6 +5,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import FormModal from "../Modal";
+import UploadJsonForm from "../forms/UploadJsonForm";
 
 const RecordsTable = ({ records, onDeleteRecord }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +19,6 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const navigate = useNavigate();
 
   const recordsPerPage = 5;
-
 
   //   console.log(records);
 
@@ -41,7 +42,6 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleDeleteRecord = async (record) => {
-
     // TODO: useNavigate to '/' instead of refresh
     const accessToken = Cookies.get("token").toString();
     console.log(record);
@@ -58,26 +58,23 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
       if (response.ok) {
         setSuccessMessage("Record deleted successfully");
         toast.success("Deleted Successfully", {
-          position: "top-right"
-        })
-
+          position: "top-right",
+        });
       } else {
         console.error("This record cant be deleted:", response.statusText);
         toast.success("Deleted Successfully", {
-          position: "top-right"
-        })
-        navigate('/')
+          position: "top-right",
+        });
+        navigate("/");
 
         // setErrorMessage("This record cant be deleted");
       }
     } catch (error) {
       console.error("Error deleting record:", error);
       toast.success("Error Deleting Record", {
-        position: "top-right"
-      })
-      navigate('/')
-
-
+        position: "top-right",
+      });
+      navigate("/");
     }
   };
 
@@ -86,11 +83,11 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
     setShowUpdateModal(false);
   };
 
-
   return (
     <div className="records-table-wrapper">
       <div className="records-table-container">
         <h2 className="table-heading">DNS Records Table</h2>
+
         <div className="search-bar">
           <input
             type="text"
@@ -152,27 +149,9 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           )}
         </div>
       </div>
-      <div className="row justify-content-between">
-        <div className="col-4">
-          <button
-            className="back-to-dashboard-button"
-            onClick={() => navigate('/')}
-          >
-            Back to Dashboard
-          </button>
-        </div>
-        <div className="col-4">
-          <button
-            className="reload-button"
-            color="primary"
-            onClick={() => navigate('/') }
-          >
-            Reload
-          </button>
-        </div>
-      </div>
 
-      {showUpdateModal && (
+
+      {/* {showUpdateModal && (
         <UpdateFormModal
           recordToUpdate={recordToUpdate}
           onUpdate={(updatedRecord) => {
@@ -180,7 +159,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           }}
           onClose={handleCloseUpdateModal}
         />
-      )}
+      )} */}
     </div>
   );
 };

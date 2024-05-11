@@ -73,31 +73,17 @@ const Dashboard = () => {
   return (
     <>
     <Header />
-    <hr />x
+    <hr />
     <div className="dashboard-container">
+
       <div className="button-container">
         <UploadJsonForm />
-
         <FormModal />
-
-        <br />
-
       </div>
-
       <br />
-        <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
-{/* 
-      {showModal && <FormModal onClose={() => setShowModal()} />} */}
+      <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
 
 
-      {showRecordsTable && (
-        <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
-      )}
-      
-      {showUploadJsonForm && (
-        <UploadJsonForm onClose={() => setShowUploadJsonForm(false)} />
-      )}
-      {error && <p className="error-message">{error}</p>}
     </div>
     </>
 
