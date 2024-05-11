@@ -7,6 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Label } from "reactstrap";
+import {  useNavigate } from "react-router-dom";
 
 function FormModal() {
   const [show, setShow] = useState(false);
@@ -28,12 +29,12 @@ function FormModal() {
     digest: "",
   });
 
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false);
   const [placeholder, setPlaceholder] = useState("");
 
   const accessToken = Cookies.get("token").toString();
 
+
+  const navigate = useNavigate();
   useEffect(() => {
     if (record.type !== "MX") {
       setRecord((prevValues) => ({ ...prevValues, priority: 0 }));
@@ -66,8 +67,10 @@ function FormModal() {
     setRecord({
       ...record,
       [prop]: value,
-
-    })
+    });
+    if (prop === "type") {
+      setPlaceholder(getPlaceholder(value));
+    }
   };
 
   const handleTypeChange = (e) => {
@@ -77,8 +80,6 @@ function FormModal() {
       type: selectedType,
       value: "",
     }));
-
-    setPlaceholder(getPlaceholder(selectedType));
   };
 
   const getPlaceholder = (type) => {
@@ -145,13 +146,6 @@ function FormModal() {
       );
       toast.success(response.data.message);
 
-      setMessage(response.data.message);
-      setSuccess(true);
-
-      setTimeout(() => {
-        setSuccess(false);
-      }, 3000);
-
       setRecord({
         domain: "",
         type: "A",
@@ -165,9 +159,10 @@ function FormModal() {
         algorithm: 0,
         digestType: 0,
         digest: "",
-      })
+      });
       setShow(false);
-
+      navigate("/")
+      
     } catch (error) {
       if (error.response && error.response.status === 409) {
         toast.error("Error: DNS record already exists", {
@@ -259,66 +254,69 @@ function FormModal() {
                 </label>
               </div>
 
-              {// Priority field if type = "MX"
-              record.type === "MX" && (
-                <div className="grid gap-2">
-                  <label htmlFor="priority">
-                    Priority
-                    <input
-                      id="priority"
-                      type="number"
-                      min="0"
-                      max="65535"
-                      placeholder="0-65535"
-                      onChange={handleInputChange("priority")}
-                      onFocus={handleFocus}
-                      value={record.priority}
-                    />
-                  </label>
-                </div>
-              )}
-
               {
-                record.type === "SRV" && (
-                    <>
-                      <div className="grid gap-2">
-                        <label htmlFor="weight">Weight
-                        <input
-                          id="weight"
-                          type="number"
-                          min="0"
-                          placeholder="Weight"
-                          onChange={handleInputChange("weight")}
-                          value={record.weight}
-                          />
-                          </label>
-                      </div>
-        
-                      <div className="grid gap-2">
-                        <label htmlFor="port">Port
-                        <input
-                          id="port"
-                          type="number"
-                          min="0"
-                          placeholder="Port"
-                          onChange={handleInputChange("port")}
-                          value={record.port}
-                          />
-                          </label>
-                      </div>
-                      <div className="grid gap-2">
-                        <label htmlFor="target">Target
-                        <input
-                          id="target"
-                          placeholder="Target"
-                          onChange={handleInputChange("target")}
-                          value={record.target}
-                          />
-                          </label>
-                      </div>
-                    </>
+                // Priority field if type = "MX"
+                record.type === "MX" && (
+                  <div className="grid gap-2">
+                    <label htmlFor="priority">
+                      Priority
+                      <input
+                        id="priority"
+                        type="number"
+                        min="0"
+                        max="65535"
+                        placeholder="0-65535"
+                        onChange={handleInputChange("priority")}
+                        onFocus={handleFocus}
+                        value={record.priority}
+                      />
+                    </label>
+                  </div>
                 )
               }
+
+              {record.type === "SRV" && (
+                <>
+                  <div className="grid gap-2">
+                    <label htmlFor="weight">
+                      Weight
+                      <input
+                        id="weight"
+                        type="number"
+                        min="0"
+                        placeholder="Weight"
+                        onChange={handleInputChange("weight")}
+                        value={record.weight}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <label htmlFor="port">
+                      Port
+                      <input
+                        id="port"
+                        type="number"
+                        min="0"
+                        placeholder="Port"
+                        onChange={handleInputChange("port")}
+                        value={record.port}
+                      />
+                    </label>
+                  </div>
+                  <div className="grid gap-2">
+                    <label htmlFor="target">
+                      Target
+                      <input
+                        id="target"
+                        placeholder="Target"
+                        onChange={handleInputChange("target")}
+                        value={record.target}
+                      />
+                    </label>
+                  </div>
+                </>
+              )}
             </div>
 
             <label>
