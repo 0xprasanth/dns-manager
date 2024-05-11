@@ -51,6 +51,7 @@ const LoginPage = () => {
         toast.success("Loggedin successfully");
         
         navigate("/dashboard");
+        
     }else if(data.status === 401){
       toast.error(data.message);
     }else{

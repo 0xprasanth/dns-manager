@@ -37,11 +37,12 @@ const useAuth = () => {
           );
           console.log(response );
 
-          Cookies.set("token", response.data.accesstoken, { expires: 7 });
+          Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
 
           handleLoggedIn(true);
+          console.log('login resp', response);
 
-          return response.data;
+          return response;
           
     }catch(err){
         console.log(err);

@@ -5,6 +5,7 @@ import RecordsTable from "../components/RecordTable/RecordTable";
 import UploadJsonForm from "../components/forms/UploadJsonForm";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Header from "../components/Header";
 
 const Dashboard = () => {
 
@@ -64,6 +65,8 @@ const Dashboard = () => {
   };
   console.log(showModal);
   return (
+    <>
+    <Header />
     <div className="dashboard-container">
       <h1 className="dashboard-title">DNS Manager</h1>
       <div className="button-container">
@@ -92,6 +95,8 @@ const Dashboard = () => {
       )}
       {error && <p className="error-message">{error}</p>}
     </div>
+    </>
+
   );
 };
 
