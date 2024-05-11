@@ -67,8 +67,8 @@ const Dashboard = () => {
   return (
     <>
     <Header />
+    <hr />x
     <div className="dashboard-container">
-      <h1 className="dashboard-title">DNS Manager</h1>
       <div className="button-container">
         <button onClick={() => setShowUploadJsonForm(true)}>
           Upload JSON File
