@@ -147,7 +147,7 @@ function FormModal() {
           },
         }
       );
-      toast.success(response.data.message);
+      toast.success(`${record.domain} created successfully`);
 
       setRecord({
         domain: "",
