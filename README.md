@@ -65,3 +65,8 @@ Open the .env in a editor and add the backend-server URL
 ```bash
 VITE_API_URL=
 ```
+Start the server 
+
+```bash
+npm run dev
+```
