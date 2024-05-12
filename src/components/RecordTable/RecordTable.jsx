@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import FormModal from "../Modal";
 import UploadJsonForm from "../forms/UploadJsonForm";
+import { Breadcrumb } from "react-bootstrap";
 
 const RecordsTable = ({ records, onDeleteRecord }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,7 +16,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [recordToUpdate, setRecordToUpdate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const htzId = Cookies.get("HostedZoneId").toString() || "no hosted zone"
   const navigate = useNavigate();
 
   const recordsPerPage = 5;
@@ -89,18 +90,25 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
 
   const ResourceRecords = (records) => {
     const rr = records.record.Value;
-    return (
-      <>
-        {rr.join('\n')}
-      </>
-    )
-  }
+    return <>{rr.join("\n")}</>;
+  };
 
   return (
     <div className="records-table-wrapper">
       <div className="records-table-container">
-        <h2 className="table-heading">DNS Records Table</h2>
-
+        <h3 className="table-heading">
+          <Breadcrumb>
+            <Breadcrumb.Item href="#">
+              DNS Record Table
+            </Breadcrumb.Item>
+            <Breadcrumb.Item active>
+              {
+                htzId
+                
+              }
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </h3>
         <div className="search-bar">
           <input
             type="text"
@@ -131,7 +139,9 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                 <td>{record.domain}</td>
                 <td>{record.type}</td>
                 <td>{record.ttl}</td>
-                <td><ResourceRecords record={record.ResourceRecords}/></td>
+                <td>
+                  <ResourceRecords record={record.ResourceRecords} />
+                </td>
                 <td>
                   <button
                     onClick={() => handleDeleteRecord(record)}
@@ -147,8 +157,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         </table>
 
         <div className="pagination">
-          {
-          }
+          {}
           {Array.from(
             { length: Math.ceil(filteredRecords.length / recordsPerPage) },
             (_, index) => (
@@ -165,7 +174,6 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
           )}
         </div>
       </div>
-
 
       {/* {showUpdateModal && (
         <UpdateFormModal

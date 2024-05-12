@@ -6,7 +6,6 @@ import { Form, InputGroup } from "react-bootstrap";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
-
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +16,7 @@ function UpdateFormModal({ recordToUpdate }) {
   const handleShow = () => setShow(true);
 
   const [record, setRecord] = useState({
+    domain: recordToUpdate.domain,
     subdomain: "",
     type: "",
     value: "",
@@ -34,18 +34,18 @@ function UpdateFormModal({ recordToUpdate }) {
       setRecord({
         subdomain: recordToUpdate.domain.split(".")[0],
         type: recordToUpdate.type,
-        value: recordToUpdate.value,
+        value: recordToUpdate.ResourceRecords.Value[0],
       });
     }
+    // console.log(recordToUpdate.ResourceRecords.Value[0]);
   }, [recordToUpdate]);
 
   const handleInputChange = (prop) => (e) => {
     // const { name, value } = e.target;
-    const value = prop === "ttl" ? parseInt(e.target.value) : e.target.value;
 
     setRecord({
       ...record,
-      [prop]: value,
+      [prop]: e.target.value,
     });
   };
 
@@ -59,7 +59,8 @@ function UpdateFormModal({ recordToUpdate }) {
 
     setPlaceholder(getPlaceholder(selectedType));
   };
-
+  let sub = recordToUpdate.domain.split(".");
+  sub.splice(0, 1);
   const getPlaceholder = (type) => {
     switch (type) {
       case "A":
@@ -93,44 +94,58 @@ function UpdateFormModal({ recordToUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const accessToken = Cookies.get("token").toString();
+    const hostedZoneId = Cookies.get("HostedZoneId").toString();
+
     try {
       if (!record.subdomain) {
-        toast.error("Error: domain is required", { position: "top-right"} )
+        toast.error("Error: domain is required", { position: "top-right" });
         setSuccess(false);
         return;
       }
- 
+
       const filteredRecord = {
-        name: `${record.subdomain}.com`,
+        name: `${record.subdomain}.${sub}`,
         type: record.type,
         value: record.value,
       };
-
-      const response = await axios.put( `${import.meta.env.VITE_API_URL}/domain/records/${record.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
+      console.log(filteredRecord);
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/domain/records/${recordToUpdate._id}`,
+        {
+          record: filteredRecord,
+          hostedZoneId: hostedZoneId
         },
-      }
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       setMessage(response.data.message);
       setSuccess(true);
-      
-      navigate('/')
+      toast.success(response.data.message,{
+        position: "top-right"
+      })
 
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.status === 409) {
         setMessage();
-        toast.error("Error: DNS record already exists", { position: "top-right"} )
-
+        toast.error("Error: DNS record already exists", {
+          position: "top-right",
+        });
       } else {
-        toast.error("Error: Unable to update DNS record", { position: "top-right"} )
-
+        toast.error("Error: Unable to update DNS record", {
+          position: "top-right",
+        });
       }
       console.error("Error updating DNS record:", error);
-
     }
   };
+
+
 
   return (
     <>
@@ -143,10 +158,10 @@ function UpdateFormModal({ recordToUpdate }) {
         <Modal.Header closeButton>
           <Modal.Title>Update DNS Record</Modal.Title>
         </Modal.Header>
+          <form onSubmit={handleSubmit}>
         <Modal.Body>
           {success && <p className="success-message">{message}</p>}
           {!success && message && <p className="error-message">{message}</p>}
-          <form onSubmit={handleSubmit}>
             {/* <label className="form-label" htmlFor="subdomain">Domain</label>
                 <input
                   type="text"
@@ -159,23 +174,27 @@ function UpdateFormModal({ recordToUpdate }) {
                 <span className="input-group-text" id="basic-addon2">
                   .com
                 </span> */}
+
+
+
             <label htmlFor="domain" className="form-label">
               Domain
             </label>
+
             <div className="input-group mb-3">
               <input
-              id="domain"
-                  type="text"
-                  name="subdomain"
-                  value={record.subdomain}
-                  onChange={handleInputChange("subdomain")}
-                  required
-                  className="form-control"
+                id="domain"
+                type="text"
+                name="subdomain"
+                value={record.subdomain}
+                onChange={handleInputChange("subdomain")}
+                required
+                className="form-control"
                 aria-label="domain"
                 aria-describedby="basic-addon2"
               />
               <span className="input-group-text" id="basic-addon2">
-                .com
+                {sub.join(".")}
               </span>
             </div>
 
@@ -204,25 +223,25 @@ function UpdateFormModal({ recordToUpdate }) {
 
             <label htmlFor="Value" className="form-label">
               Value:
-              </label>
-              <input
-                type="text"
-                name="value"
-                id="Value"
-                value={record.value}
-                onChange={handleInputChange("value")}
-                onFocus={handleFocus}
-                placeholder={placeholder}
-                required
-              />
+            </label>
+            <input
+              type="text"
+              name="value"
+              id="Value"
+              value={record.value}
+              onChange={handleInputChange("value")}
+              onFocus={handleFocus}
+              placeholder={placeholder}
+              required
+            />
             {/* <button type="submit">Update Record</button> */}
-          </form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" type="submit">
             Save Changes
           </Button>
         </Modal.Footer>
+          </form>
       </Modal>
     </>
   );

@@ -15,7 +15,7 @@ function AddDomain() {
 
   const [domainName, setDomainName] = useState("");
 
-  const hzId = Cookies.get("HostedZoneId").toString() 
+  const hzId = Cookies.get("HostedZoneId").toString();
 
   const navigate = useNavigate();
 
@@ -30,14 +30,12 @@ function AddDomain() {
     const userId = Cookies.get("userId").toString();
     const accessToken = Cookies.get("token").toString();
 
-
     try {
-
-      if(!domainName){
+      if (!domainName) {
         toast.info("Domain Name is required", {
-          position: "top-right"
-        })
-        return
+          position: "top-right",
+        });
+        return;
       }
 
       const response = await axios.post(
@@ -58,10 +56,12 @@ function AddDomain() {
 
       console.log("domain", response);
       toast.success(response?.data?.message);
-      Cookies.set("HostedZoneId",  response?.data?.user?.HostedZoneId, { expires: 7, sameSite:"None" })
+      Cookies.set("HostedZoneId", response?.data?.user?.HostedZoneId, {
+        expires: 7,
+        sameSite: "None",
+      });
       setShow(false);
-      navigate('/')
-
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -69,8 +69,12 @@ function AddDomain() {
 
   return (
     <>
-      <Button variant="primary" hidden={hzId ? false : true} onClick={handleShow}>
-        Add Domain
+      <Button
+        variant="primary"
+        hidden={hzId ? false : true}
+        onClick={handleShow}
+      >
+        Create Hosted Zone
       </Button>
 
       <Modal
@@ -82,20 +86,24 @@ function AddDomain() {
         <Modal.Header closeButton>
           <Modal.Title>Add Domain</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
+          <Modal.Body>
             <Form.Group className="mb-3" controlId="domain-name">
               <Form.Label>Domain Name*</Form.Label>
-              <Form.Control type="text" placeholder="example.com"
-              value={domainName}
-              onChange={handleInputChange} />
+              <Form.Control
+                type="text"
+                placeholder="example.com"
+                value={domainName}
+                onChange={handleInputChange}
+              />
             </Form.Group>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit" variant="primary">
+              Add
             </Button>
-            <Button type="submit" variant="primary">Add</Button>
-          </Form>
-        </Modal.Body>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </>
   );
