@@ -21,6 +21,8 @@ const Header = () => {
 
         // clear cookies
         Cookies.remove("token");
+        Cookies.remove("HostedZoneId");
+        Cookies.remove("userId");
 
         handleLoggedIn(false);
 
