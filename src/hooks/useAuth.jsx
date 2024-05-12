@@ -19,8 +19,8 @@ const useAuth = () => {
         // Cookies.set("token", token, { expires: 7 });
         handleLoggedIn(true);
         
-        Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
-        Cookies.set("userId", response.data._id, { expires: 7, sameSite:"None" });
+        // Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
+        // Cookies.set("userId", response.data._id, { expires: 7, sameSite:"None" });
         // Cookies.set("HostedZoneId", response.data.data.HostedZoneId, { expires: 7, sameSite:"None" });
         return response.data;
     }catch (err) {

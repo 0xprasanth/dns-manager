@@ -41,8 +41,9 @@ const SignupPage = () => {
       );
   
       toast("Account created successfully");
-  
-      navigate("/dashboard");
+
+
+      navigate("/login");
     };
 
   return (
