@@ -36,3 +36,32 @@ The types of DNS records include:
 ### Visit Backend Repo [dns-manager-backend](https://github.com/ptech12/dns-manager-backend)
 
 
+## Installation
+
+You can run this app for testing and devlopment by running the following in your terminal
+
+Make sure you have Nodejs install and version above v18.17.0
+
+```bash
+git clone https://github.com/ptech12/dns-manager
+```
+
+change to project directory and install dependencies
+
+```bash
+cd dns-manager
+```
+```bash
+npm install
+```
+
+Create the Environment Variable file and update the contents
+
+```bash
+touch .env
+```
+
+Open the .env in a editor and add the backend-server URL
+```bash
+VITE_API_URL=
+```
