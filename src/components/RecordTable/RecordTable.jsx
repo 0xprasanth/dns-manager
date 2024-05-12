@@ -57,7 +57,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
 
       if (response.ok) {
         setSuccessMessage("Record deleted successfully");
-        toast.success("Deleted Successfully", {
+        toast.success(response.message, {
           position: "top-right",
         });
       } else {
@@ -83,6 +83,19 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
     setShowUpdateModal(false);
   };
 
+  // console.log(currentRecords.map((record) => {
+  //   return record.ResourceRecords
+  // }));
+
+  const ResourceRecords = (records) => {
+    const rr = records.record.Value;
+    return (
+      <>
+        {rr.join('\n')}
+      </>
+    )
+  }
+
   return (
     <div className="records-table-wrapper">
       <div className="records-table-container">
@@ -99,6 +112,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         </div>
         {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
         {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
         <table className="records-table">
           <thead>
             <tr>
@@ -117,7 +131,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                 <td>{record.domain}</td>
                 <td>{record.type}</td>
                 <td>{record.ttl}</td>
-                <td>{record.value}</td>
+                <td><ResourceRecords record={record.ResourceRecords}/></td>
                 <td>
                   <button
                     onClick={() => handleDeleteRecord(record)}
@@ -133,6 +147,8 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         </table>
 
         <div className="pagination">
+          {
+          }
           {Array.from(
             { length: Math.ceil(filteredRecords.length / recordsPerPage) },
             (_, index) => (

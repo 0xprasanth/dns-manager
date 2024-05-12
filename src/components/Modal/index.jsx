@@ -33,8 +33,11 @@ function FormModal() {
 
   const accessToken = Cookies.get("token").toString();
 
+  const hzId = Cookies.get("HostedZoneId").toString();
+
 
   const navigate = useNavigate();
+
   useEffect(() => {
     if (record.type !== "MX") {
       setRecord((prevValues) => ({ ...prevValues, priority: 0 }));
@@ -68,6 +71,8 @@ function FormModal() {
       ...record,
       [prop]: value,
     });
+
+
     if (prop === "type") {
       setPlaceholder(getPlaceholder(value));
     }
@@ -131,12 +136,10 @@ function FormModal() {
       }
       // Send a POST request to the backend server
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/domain/records`,
+        `${import.meta.env.VITE_API_URL}/domain/records/create-record`,
         {
           record: record,
-          hostedZoneData: {
-            name: record.domain,
-          },
+          hostedZoneId: hzId
         },
         {
           headers: {

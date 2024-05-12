@@ -10,17 +10,11 @@ import AddDomain from "../components/Modal/AddDomain";
 
 const Dashboard = () => {
 
-
-  const [showModal, setShowModal] = useState(false);
-
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-
   const [records, setRecords] = useState([]);
 
   const [showRecordsTable, setShowRecordsTable] = useState(false);
-  const [showUploadJsonForm, setShowUploadJsonForm] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const [isHostedZone, setIsHostedZone] = useState(false);
 
   const fetchRecords = async () => {
     const accessToken = Cookies.get("token").toString();
@@ -36,6 +30,8 @@ const Dashboard = () => {
       // console.log(response.data);
       
       setRecords(response.data.data);
+
+
 
     } catch (error) {
       console.error("Error fetching DNS records:", error);
@@ -70,7 +66,7 @@ const Dashboard = () => {
     }
     setShowRecordsTable(!showRecordsTable);
   };
-  // console.log(showModal);
+  console.log(isHostedZone);
   return (
     <>
     <Header />
@@ -79,8 +75,11 @@ const Dashboard = () => {
 
       <div className="button-container">
         <UploadJsonForm />
-        <FormModal />
-        <AddDomain />
+
+         <AddDomain  />
+
+   <FormModal  /> 
+
       </div>
       <br />
       <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />

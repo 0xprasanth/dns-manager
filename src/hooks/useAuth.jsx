@@ -18,6 +18,10 @@ const useAuth = () => {
         );
         // Cookies.set("token", token, { expires: 7 });
         handleLoggedIn(true);
+        
+        Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
+        Cookies.set("userId", response.data._id, { expires: 7, sameSite:"None" });
+        // Cookies.set("HostedZoneId", response.data.data.HostedZoneId, { expires: 7, sameSite:"None" });
         return response.data;
     }catch (err) {
         console.log(err);
@@ -35,21 +39,22 @@ const useAuth = () => {
               password,
             },
           );
-          console.log(response );
 
           Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
+          Cookies.set("userId", response.data.data._id, { expires: 7, sameSite:"None" });
+          Cookies.set("HostedZoneId", response?.data?.data?.HostedZoneId, { expires: 7, sameSite:"None" });
 
           handleLoggedIn(true);
+
           console.log('login resp', response);
 
           return response;
           
     }catch(err){
-        console.log(err);
 
         return {
-          status: 401,
-          message: err.message
+          status: err.response.status,
+          message: err.response.data.message
         }
     }
   }
