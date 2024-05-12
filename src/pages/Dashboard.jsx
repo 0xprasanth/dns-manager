@@ -9,7 +9,6 @@ import Header from "../components/Header";
 import AddDomain from "../components/Modal/AddDomain";
 
 const Dashboard = () => {
-
   const [records, setRecords] = useState([]);
 
   const [showRecordsTable, setShowRecordsTable] = useState(false);
@@ -18,30 +17,30 @@ const Dashboard = () => {
 
   const fetchRecords = async () => {
     const accessToken = Cookies.get("token").toString();
+    const hzId = Cookies.get("HostedZoneId").toString();
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/domain/records`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const response = await axios({
+        method: "post",
+        url: `${import.meta.env.VITE_API_URL}/domain/records/`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          hostedZoneId: `${hzId}`
         }
-      );
-      // console.log(response.data);
-      
+      });
+      console.log(response.data);
+
       setRecords(response.data.data);
-
-
-
+      console.log(records);
     } catch (error) {
       console.error("Error fetching DNS records:", error);
     }
   };
 
-  useEffect( ()=>{
+  useEffect(() => {
     fetchRecords();
-    
-  }, [])
+  }, []);
 
   const handleDeleteRecord = async (recordId) => {
     try {
@@ -69,25 +68,20 @@ const Dashboard = () => {
   console.log(isHostedZone);
   return (
     <>
-    <Header />
-    <hr />
-    <div className="dashboard-container">
+      <Header />
+      <hr />
+      <div className="dashboard-container">
+        <div className="button-container">
+          <UploadJsonForm />
 
-      <div className="button-container">
-        <UploadJsonForm />
+          <AddDomain />
 
-         <AddDomain  />
-
-   <FormModal  /> 
-
+          <FormModal />
+        </div>
+        <br />
+        <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
       </div>
-      <br />
-      <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
-
-
-    </div>
     </>
-
   );
 };
 
