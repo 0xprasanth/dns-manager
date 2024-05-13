@@ -65,7 +65,7 @@ const Dashboard = () => {
     }
     setShowRecordsTable(!showRecordsTable);
   };
-  console.log(isHostedZone);
+
   return (
     <>
       <Header />

@@ -42,6 +42,7 @@ const useAuth = () => {
 
           Cookies.set("token", response.data.accesstoken, { expires: 7, sameSite:"None" });
           Cookies.set("userId", response.data.data._id, { expires: 7, sameSite:"None" });
+          Cookies.set("userName", response.data.data.username, { expires: 7, sameSite:"None" });
           Cookies.set("HostedZoneId", response?.data?.data?.HostedZoneId, { expires: 7, sameSite:"None" });
 
           handleLoggedIn(true);
