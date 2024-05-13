@@ -16,7 +16,11 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [recordToUpdate, setRecordToUpdate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const htzId = Cookies.get("HostedZoneId").toString() || "no hosted zone";
+  const q = Cookies.get("HostedZoneId").toString()
+  const hzId = !(q == undefined) ? q : "Create New HostedZone"
+  
+  const userName = Cookies.get("userName").toString();
+
   const navigate = useNavigate();
 
   const recordsPerPage = 5;
@@ -94,22 +98,17 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
     return <>{records?.record?.Value?.join(" , ")}</>;
   };
 
-  console.log(typeof htzId === "undefined");
 
   return (
     <div className="records-table-wrapper">
       <div className="records-table-container">
         <h3 className="table-heading">
-          {htzId ? (
-            <Breadcrumb>
+        <Breadcrumb>
               <Breadcrumb.Item href="#">DNS Record Table</Breadcrumb.Item>
-              <Breadcrumb.Item active>{htzId}</Breadcrumb.Item>
+              <Breadcrumb.Item > {userName} </Breadcrumb.Item>
+              <Breadcrumb.Item active>{hzId}</Breadcrumb.Item>
             </Breadcrumb>
-          ) : (
-            <Breadcrumb>
-              <Breadcrumb.Item href="#">DNS Record Table</Breadcrumb.Item>
-            </Breadcrumb>
-          )}
+          
         </h3>
         <div className="search-bar">
           <input
