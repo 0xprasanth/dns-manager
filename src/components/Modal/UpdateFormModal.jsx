@@ -18,9 +18,17 @@ function UpdateFormModal({ recordToUpdate }) {
   const [record, setRecord] = useState({
     domain: recordToUpdate.domain,
     subdomain: "",
-    type: "",
+    type: "A",
     value: "",
-    ttl: ""
+    ttl: 0,
+    priority: undefined,
+    weight: undefined,
+    port: undefined,
+    target: "",
+    keyTag: undefined,
+    algorithm: undefined,
+    digestType: undefined,
+    digest: "",
   });
 
   const navigate = useNavigate();
@@ -37,12 +45,62 @@ function UpdateFormModal({ recordToUpdate }) {
       setRecord({
         subdomain: recordToUpdate.domain.split(".")[0],
         type: recordToUpdate.type,
-        value: recordToUpdate?.ResourceRecords?.Value,
-        ttl: recordToUpdate.ttl
+        value: recordToUpdate.value,
+        ttl: recordToUpdate.ttl,
       });
     }
     // console.log(recordToUpdate.ResourceRecords.Value[0]);
   }, [recordToUpdate]);
+
+  // useEffect(() => {
+  //   if (record.type !== "MX") {
+  //     setRecord((prevValues) => ({ ...prevValues, priority: 0 }));
+  //   }
+
+  //   if (record.type !== "SRV") {
+  //     setRecord((prevValues) => ({
+  //       ...prevValues,
+  //       weight: 0,
+  //       port: 0,
+  //       target: "",
+  //     }));
+  //   }
+
+  //   if (record.type !== "DS") {
+  //     setRecord((prevValues) => ({
+  //       ...prevValues,
+  //       keyTag: 0,
+  //       algorithm: 0,
+  //       digestType: 0,
+  //       digest: "",
+  //     }));
+  //   }
+  // }, [record.type]);
+
+  useEffect(() => {
+    if (record.type === "MX") {
+      setRecord((prevValues) => ({ ...prevValues, priority: recordToUpdate.priority }));
+    }
+
+    if (record.type === "SRV") {
+      setRecord((prevValues) => ({
+        ...prevValues,
+        weight: recordToUpdate.weight,
+        port: recordToUpdate.port,
+        target: recordToUpdate.target,
+      }));
+    }
+
+    if (record.type === "DS") {
+      setRecord((prevValues) => ({
+        ...prevValues,
+        keyTag: recordToUpdate.keyTag,
+        algorithm: recordToUpdate.keyTag,
+        digestType: recordToUpdate.digestType,
+        digest: recordToUpdate.digest,
+      }));
+    }
+  }, [record.type]);
 
   const handleInputChange = (prop) => (e) => {
     // const { name, value } = e.target;
@@ -63,7 +121,6 @@ function UpdateFormModal({ recordToUpdate }) {
 
     setPlaceholder(getPlaceholder(selectedType));
   };
-
 
   const getPlaceholder = (type) => {
     switch (type) {
@@ -114,9 +171,7 @@ function UpdateFormModal({ recordToUpdate }) {
 
       const filteredRecord = {
         domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
-        type: record.type,
-        ttl: record.ttl,
-        value: record.value,
+        ...record,
       };
 
       console.log("filter records", filteredRecord);
@@ -139,7 +194,23 @@ function UpdateFormModal({ recordToUpdate }) {
         position: "top-right",
       });
 
+      setRecord({
+        domain: "",
+        type: "A",
+        value: "",
+        ttl: 0,
+        priority: 0,
+        weight: 0,
+        port: 0,
+        target: "",
+        keyTag: 0,
+        algorithm: 0,
+        digestType: 0,
+        digest: "",
+      });
+
       navigate("/");
+
     } catch (error) {
       if (error.response && error.response.status === 409) {
         setMessage();
@@ -154,12 +225,15 @@ function UpdateFormModal({ recordToUpdate }) {
       console.error("Error updating DNS record:", error);
     }
   };
-
+console.log(recordToUpdate);
   return (
     <>
       <button className="update-button" onClick={handleShow}>
         {" "}
-        Update{" "}
+        
+        Update
+        
+        {" "}
       </button>
 
       <Modal show={show} onHide={handleClose}>
@@ -199,6 +273,7 @@ function UpdateFormModal({ recordToUpdate }) {
                 aria-label="domain"
                 aria-describedby="basic-addon2"
               />
+
               <span className="input-group-text" id="basic-addon2">
                 {sub.join(".")}
               </span>
@@ -227,7 +302,6 @@ function UpdateFormModal({ recordToUpdate }) {
               </select>
             </label>
 
-
             <label htmlFor="ttl" className="form-label">
               Time to Live:
             </label>
@@ -241,6 +315,73 @@ function UpdateFormModal({ recordToUpdate }) {
               placeholder={placeholder}
               required
             />
+<br />
+            {/* <div className="grid grid-cols-2 gap-4"> */}
+              {
+                // Priority field if type = "MX"
+                record.type === "MX" && (
+
+                    <label className="form-label" htmlFor="priority">
+                      Priority
+                      <input
+                        id="priority"
+                        type="number"
+                        min="0"
+                        max="65535"
+                        placeholder="0-65535"
+                        onChange={handleInputChange("priority")}
+                        onFocus={handleFocus}
+                        value={record?.priority}
+                      />
+                    </label>
+                  
+                )
+              }
+
+              {record.type === "SRV" && (
+                <>
+
+                    <label className="form-label" htmlFor="weight">
+                      Weight
+                      <input
+                        id="weight"
+                        type="number"
+                        min="0"
+                        placeholder="Weight"
+                        onChange={handleInputChange("weight")}
+                        value={record.weight}
+                      />
+                    </label>
+
+
+
+                    <label  className="form-label" htmlFor="port">
+                      Port
+                      <input
+                        id="port"
+                        type="number"
+                        min="0"
+                        placeholder="Port"
+                        onChange={handleInputChange("port")}
+                        value={record.port}
+                      />
+                    </label>
+
+
+                    <label className="form-label" htmlFor="target">
+                      Target
+                      <input
+                        id="target"
+                        placeholder="Target"
+                        onChange={handleInputChange("target")}
+                        value={record.target}
+                      />
+                    </label>
+
+                </>
+              )}
+            {/* </div> */}
+
             <label htmlFor="Value" className="form-label">
               Value:
             </label>

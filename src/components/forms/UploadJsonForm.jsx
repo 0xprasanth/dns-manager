@@ -20,6 +20,7 @@ const UploadJsonForm = ({ onClose }) => {
       return;
     }
     const accessToken = Cookies.get("token").toString();
+    const hzid = Cookies.get("HostedZoneId").toString();
 
     const fileReader = new FileReader();
     fileReader.onload = async (event) => {
@@ -28,13 +29,15 @@ const UploadJsonForm = ({ onClose }) => {
         const { domain, type, value } = jsonContent;
         console.log(jsonContent);
         const response = await axios.post( `${import.meta.env.VITE_API_URL}/domain/records/bulk`,
-          {records: jsonContent}
+          {
+            hostesdZoneId: hzid,
+            records: jsonContent}
           ,{
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },}
         );
-        console.log("DNS record created:", response.data);
+        console.log("DNS record created:", response.message);
         setSuccessMessage("DNS record created successfully");
         setTimeout(() => {
           onClose();

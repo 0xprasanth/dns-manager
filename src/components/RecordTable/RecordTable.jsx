@@ -91,11 +91,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   const ResourceRecords = (records) => {
     // const rr = records.record.Value.join("\n")÷
     // console.log(records?.record);
-    return <>
-    {
-      records?.record?.Value?.join(" , ")
-    }
-    </> ;
+    return <>{records?.record?.Value?.join(" , ")}</>;
   };
 
   console.log(typeof htzId === "undefined");
@@ -146,7 +142,10 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                 <td>{record.type}</td>
                 <td>{record.ttl}</td>
                 <td>
-                  <ResourceRecords record={record.ResourceRecords} />
+                  {/* <ResourceRecords record={record.ResourceRecords} /> */}
+                  {record.type === "MX"
+                    ? `${record?.priority} ${record.value}`
+                    : `${record.value}`}
                   {/* {
                     record.ResourceRecords.map()
                   } */}
