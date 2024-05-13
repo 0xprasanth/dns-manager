@@ -20,9 +20,12 @@ function UpdateFormModal({ recordToUpdate }) {
     subdomain: "",
     type: "",
     value: "",
+    ttl: ""
   });
 
   const navigate = useNavigate();
+  let sub = recordToUpdate.domain.split(".");
+  sub.splice(0, 1);
 
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
@@ -34,7 +37,8 @@ function UpdateFormModal({ recordToUpdate }) {
       setRecord({
         subdomain: recordToUpdate.domain.split(".")[0],
         type: recordToUpdate.type,
-        value: recordToUpdate.ResourceRecords.Value[0],
+        value: recordToUpdate?.ResourceRecords?.Value,
+        ttl: recordToUpdate.ttl
       });
     }
     // console.log(recordToUpdate.ResourceRecords.Value[0]);
@@ -59,8 +63,8 @@ function UpdateFormModal({ recordToUpdate }) {
 
     setPlaceholder(getPlaceholder(selectedType));
   };
-  let sub = recordToUpdate.domain.split(".");
-  sub.splice(0, 1);
+
+
   const getPlaceholder = (type) => {
     switch (type) {
       case "A":
@@ -92,6 +96,9 @@ function UpdateFormModal({ recordToUpdate }) {
     setPlaceholder("");
   };
 
+  // console.log(`${record.subdomain}.${sub[0]}.${sub[1]}`);
+
+  // console.log(sub[1]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -106,16 +113,18 @@ function UpdateFormModal({ recordToUpdate }) {
       }
 
       const filteredRecord = {
-        name: `${record.subdomain}.${sub}`,
+        domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
         type: record.type,
+        ttl: record.ttl,
         value: record.value,
       };
-      console.log(filteredRecord);
+
+      console.log("filter records", filteredRecord);
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/domain/records/${recordToUpdate._id}`,
         {
           record: filteredRecord,
-          hostedZoneId: hostedZoneId
+          hostedZoneId: hostedZoneId,
         },
         {
           headers: {
@@ -123,11 +132,12 @@ function UpdateFormModal({ recordToUpdate }) {
           },
         }
       );
+      console.log(response.data);
       setMessage(response.data.message);
       setSuccess(true);
-      toast.success(response.data.message,{
-        position: "top-right"
-      })
+      toast.success(response.data.message, {
+        position: "top-right",
+      });
 
       navigate("/");
     } catch (error) {
@@ -145,8 +155,6 @@ function UpdateFormModal({ recordToUpdate }) {
     }
   };
 
-
-
   return (
     <>
       <button className="update-button" onClick={handleShow}>
@@ -158,10 +166,10 @@ function UpdateFormModal({ recordToUpdate }) {
         <Modal.Header closeButton>
           <Modal.Title>Update DNS Record</Modal.Title>
         </Modal.Header>
-          <form onSubmit={handleSubmit}>
-        <Modal.Body>
-          {success && <p className="success-message">{message}</p>}
-          {!success && message && <p className="error-message">{message}</p>}
+        <form onSubmit={handleSubmit}>
+          <Modal.Body>
+            {success && <p className="success-message">{message}</p>}
+            {!success && message && <p className="error-message">{message}</p>}
             {/* <label className="form-label" htmlFor="subdomain">Domain</label>
                 <input
                   type="text"
@@ -174,8 +182,6 @@ function UpdateFormModal({ recordToUpdate }) {
                 <span className="input-group-text" id="basic-addon2">
                   .com
                 </span> */}
-
-
 
             <label htmlFor="domain" className="form-label">
               Domain
@@ -221,6 +227,20 @@ function UpdateFormModal({ recordToUpdate }) {
               </select>
             </label>
 
+
+            <label htmlFor="ttl" className="form-label">
+              Time to Live:
+            </label>
+            <input
+              type="text"
+              name="ttl"
+              id="ttl"
+              value={record.ttl}
+              onChange={handleInputChange("ttl")}
+              onFocus={handleFocus}
+              placeholder={placeholder}
+              required
+            />
             <label htmlFor="Value" className="form-label">
               Value:
             </label>
@@ -235,13 +255,13 @@ function UpdateFormModal({ recordToUpdate }) {
               required
             />
             {/* <button type="submit">Update Record</button> */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" type="submit">
-            Save Changes
-          </Button>
-        </Modal.Footer>
-          </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" type="submit">
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </>
   );

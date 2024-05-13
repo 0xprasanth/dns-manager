@@ -89,8 +89,13 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
   // }));
 
   const ResourceRecords = (records) => {
-    const rr = records.record.Value;
-    return <>{rr.join("\n")}</>;
+    // const rr = records.record.Value.join("\n")÷
+    // console.log(records?.record);
+    return <>
+    {
+      records?.record?.Value?.join(" , ")
+    }
+    </> ;
   };
 
   console.log(typeof htzId === "undefined");
@@ -99,17 +104,16 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
     <div className="records-table-wrapper">
       <div className="records-table-container">
         <h3 className="table-heading">
-          {htzId ?  (
+          {htzId ? (
             <Breadcrumb>
               <Breadcrumb.Item href="#">DNS Record Table</Breadcrumb.Item>
               <Breadcrumb.Item active>{htzId}</Breadcrumb.Item>
             </Breadcrumb>
-          ): (
+          ) : (
             <Breadcrumb>
               <Breadcrumb.Item href="#">DNS Record Table</Breadcrumb.Item>
             </Breadcrumb>
-          )
-          }
+          )}
         </h3>
         <div className="search-bar">
           <input
@@ -143,6 +147,9 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                 <td>{record.ttl}</td>
                 <td>
                   <ResourceRecords record={record.ResourceRecords} />
+                  {/* {
+                    record.ResourceRecords.map()
+                  } */}
                 </td>
                 <td>
                   <button
