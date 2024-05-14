@@ -7,7 +7,7 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Label } from "reactstrap";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 
 function FormModal({ rootDomain }) {
@@ -17,6 +17,7 @@ function FormModal({ rootDomain }) {
 
   const [record, setRecord] = useState({
     domain: "",
+    subdomain: "",
     type: "A",
     value: "",
     ttl: 0,
@@ -72,7 +73,6 @@ function FormModal({ rootDomain }) {
       ...record,
       [prop]: value,
     });
-
 
     if (prop === "type") {
       setPlaceholder(getPlaceholder(value));
@@ -130,17 +130,20 @@ function FormModal({ rootDomain }) {
     };
 
     console.log(payload);
-  
+
     try {
-      if (!record.domain) {
-        record.domain = rootDomain.domain
+      if (!record.subdomain) {
+        record.domain = rootDomain.domain;
+      } else {
+        record.domain = `${record.subdomain}.${rootDomain.domain}`;
       }
+
       // Send a POST request to the backend server
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/domain/records/create-record`,
         {
           record: record,
-          hostedZoneId: hzId
+          hostedZoneId: hzId,
         },
         {
           headers: {
@@ -165,8 +168,7 @@ function FormModal({ rootDomain }) {
         digest: "",
       });
       setShow(false);
-      navigate("/")
-      
+      navigate("/");
     } catch (error) {
       if (error.response && error.response.status === 409) {
         toast.error("Error: DNS record already exists", {
@@ -205,25 +207,45 @@ function FormModal({ rootDomain }) {
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-
+            <label htmlFor="domain" className="form-label">
+              Subdomain
+            </label>
             <div className="grid gap-2">
-            <Form.Text id='rootDomain info block'>
-            Keep blank to create a record for the root domain.
-            </Form.Text>
+              <Form.Text id="rootDomain info block">
+                Keep blank to create a record for the root domain.
+              </Form.Text>
 
-              <label>
-                Domain
+
+              {/* <label>
+                Enter Subdomain
                 <input
                   type="text"
                   name="domain"
-                  value={record.domain}
-                  onChange={handleInputChange("domain")}
+                  value={record.subdomain}
+                  onChange={handleInputChange("subdomain")}
                   placeholder={rootDomain?.domain}
                 />
               </label>
+              <span className="input-group-text" id="basic-addon2">
+                {rootDomain?.domain}
+              </span> */}
+              <div className="input-group mb-3">
+                <input
+                  id="domain"
+                  type="text"
+                  name="subdomain"
+                  value={record.subdomain}
+                  onChange={handleInputChange("subdomain")}
+                  className="form-control"
+                  aria-label="domain"
+                  aria-describedby="basic-addon2"
+                />
 
+                <span className="input-group-text" id="basic-addon2">
+                  {rootDomain?.domain}
+                </span>
+              </div>
             </div>
-
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
