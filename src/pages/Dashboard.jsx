@@ -76,7 +76,8 @@ const Dashboard = () => {
 
           <AddDomain />
 
-          <FormModal />
+          <FormModal rootDomain={records[0]} />
+          
         </div>
         <br />
         <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />

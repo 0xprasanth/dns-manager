@@ -8,8 +8,9 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Label } from "reactstrap";
 import {  useNavigate } from "react-router-dom";
+import { Form } from "react-bootstrap";
 
-function FormModal() {
+function FormModal({ rootDomain }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -29,12 +30,12 @@ function FormModal() {
     digest: "",
   });
 
+  console.log(rootDomain);
   const [placeholder, setPlaceholder] = useState("");
 
   const accessToken = Cookies.get("token").toString();
 
   const hzId = Cookies.get("HostedZoneId").toString();
-
 
   const navigate = useNavigate();
 
@@ -127,12 +128,12 @@ function FormModal() {
         name: record.domain,
       },
     };
+
     console.log(payload);
+  
     try {
       if (!record.domain) {
-        setMessage("Error: Domain is required");
-        setSuccess(false);
-        return;
+        record.domain = rootDomain.domain
       }
       // Send a POST request to the backend server
       const response = await axios.post(
@@ -204,18 +205,25 @@ function FormModal() {
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
+
             <div className="grid gap-2">
+            <Form.Text id='rootDomain info block'>
+            Keep blank to create a record for the root domain.
+            </Form.Text>
+
               <label>
-                Domain*
+                Domain
                 <input
                   type="text"
                   name="domain"
                   value={record.domain}
                   onChange={handleInputChange("domain")}
-                  required
+                  placeholder={rootDomain?.domain}
                 />
               </label>
+
             </div>
+
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

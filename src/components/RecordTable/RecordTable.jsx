@@ -156,7 +156,7 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                   >
                     Delete
                   </button>
-                  <UpdateFormModal recordToUpdate={record} />
+                  <UpdateFormModal recordToUpdate={record} rootDomain={records[0]} />
                 </td>
               </tr>
             ))}

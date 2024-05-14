@@ -9,14 +9,15 @@ import Cookies from "js-cookie";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 
-function UpdateFormModal({ recordToUpdate }) {
+function UpdateFormModal({ recordToUpdate, rootDomain }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  // console.log(recordToUpdate.domain === rootDomain.domain);
 
   const [record, setRecord] = useState({
-    domain: recordToUpdate.domain,
+    domain: "",
     subdomain: "",
     type: "A",
     value: "",
@@ -32,8 +33,22 @@ function UpdateFormModal({ recordToUpdate }) {
   });
 
   const navigate = useNavigate();
+
   let sub = recordToUpdate.domain.split(".");
+
   sub.splice(0, 1);
+
+  // console.log(sub, rootDomain.domain);
+
+  //check for domain is same as rootDomain
+  // if(sub.length <= 1){
+  //   sub = rootDomain.domain.split('.')
+  //   setRecord({
+  //     ...record,
+  //     domain: ""
+  //   })
+  // }
+  // console.log(sub);
 
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
@@ -41,13 +56,22 @@ function UpdateFormModal({ recordToUpdate }) {
 
   // console.log(recordToUpdate);
   useEffect(() => {
-    if (recordToUpdate) {
+    if (recordToUpdate.domain === rootDomain.domain) {
+      setRecord({
+        domain: rootDomain.domain,
+        subdomain: "",
+        type: recordToUpdate.type,
+        value: recordToUpdate.value,
+        ttl: recordToUpdate.ttl,
+      });
+    }else{
       setRecord({
         subdomain: recordToUpdate.domain.split(".")[0],
         type: recordToUpdate.type,
         value: recordToUpdate.value,
         ttl: recordToUpdate.ttl,
-      });
+      })
+
     }
     // console.log(recordToUpdate.ResourceRecords.Value[0]);
   }, [recordToUpdate]);
@@ -79,7 +103,10 @@ function UpdateFormModal({ recordToUpdate }) {
 
   useEffect(() => {
     if (record.type === "MX") {
-      setRecord((prevValues) => ({ ...prevValues, priority: recordToUpdate.priority }));
+      setRecord((prevValues) => ({
+        ...prevValues,
+        priority: recordToUpdate.priority,
+      }));
     }
 
     if (record.type === "SRV") {
@@ -156,6 +183,7 @@ function UpdateFormModal({ recordToUpdate }) {
   // console.log(`${record.subdomain}.${sub[0]}.${sub[1]}`);
 
   // console.log(sub[1]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -163,16 +191,25 @@ function UpdateFormModal({ recordToUpdate }) {
     const hostedZoneId = Cookies.get("HostedZoneId").toString();
 
     try {
-      if (!record.subdomain) {
-        toast.error("Error: domain is required", { position: "top-right" });
-        setSuccess(false);
-        return;
-      }
+      // if (!record.subdomain) {
+      //   toast.error("Error: domain is required", { position: "top-right" });
+      //   setSuccess(false);
+      //   return;
+      // }
 
       const filteredRecord = {
         domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
         ...record,
       };
+      // let filteredRecord;
+
+      // if (recordToUpdate.domain === rootDomain.domain) {
+      //   filteredRecord = {
+      //     domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
+      //     ...record,
+      //   };
+      //   console.log(filteredRecord.domain);
+      // }
 
       console.log("filter records", filteredRecord);
       const response = await axios.put(
@@ -196,6 +233,7 @@ function UpdateFormModal({ recordToUpdate }) {
 
       setRecord({
         domain: "",
+        subdomain: "",
         type: "A",
         value: "",
         ttl: 0,
@@ -210,7 +248,6 @@ function UpdateFormModal({ recordToUpdate }) {
       });
 
       navigate("/");
-
     } catch (error) {
       if (error.response && error.response.status === 409) {
         setMessage();
@@ -225,15 +262,23 @@ function UpdateFormModal({ recordToUpdate }) {
       console.error("Error updating DNS record:", error);
     }
   };
-console.log(recordToUpdate);
+  // console.log(recordToUpdate);
+
+  const checkRecord = () => {
+    const filteredRecord = {
+      domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
+      ...record,
+    };
+    console.log("record length", filteredRecord.length);
+
+    console.log("filter records", filteredRecord);
+  };
+
   return (
     <>
       <button className="update-button" onClick={handleShow}>
         {" "}
-        
-        Update
-        
-        {" "}
+        Update{" "}
       </button>
 
       <Modal show={show} onHide={handleClose}>
@@ -258,8 +303,11 @@ console.log(recordToUpdate);
                 </span> */}
 
             <label htmlFor="domain" className="form-label">
-              Domain
+              Subdomain
             </label>
+            <Form.Text>
+            Keep blank to create a record for the root domain.
+            </Form.Text>
 
             <div className="input-group mb-3">
               <input
@@ -268,14 +316,13 @@ console.log(recordToUpdate);
                 name="subdomain"
                 value={record.subdomain}
                 onChange={handleInputChange("subdomain")}
-                required
                 className="form-control"
                 aria-label="domain"
                 aria-describedby="basic-addon2"
               />
 
               <span className="input-group-text" id="basic-addon2">
-                {sub.join(".")}
+                {sub.length <= 0 ? sub.join(".") : rootDomain.domain}
               </span>
             </div>
 
@@ -315,71 +362,79 @@ console.log(recordToUpdate);
               placeholder={placeholder}
               required
             />
-<br />
+            <Form.Text>
+            Recommended values: 60 to 172800 (two days)
+            </Form.Text>
+            
+            <br />
+
+
             {/* <div className="grid grid-cols-2 gap-4"> */}
-              {
-                // Priority field if type = "MX"
-                record.type === "MX" && (
-
-                    <label className="form-label" htmlFor="priority">
-                      Priority
-                      <input
-                        id="priority"
-                        type="number"
-                        min="0"
-                        max="65535"
-                        placeholder="0-65535"
-                        onChange={handleInputChange("priority")}
-                        onFocus={handleFocus}
-                        value={record?.priority}
-                      />
-                    </label>
-                  
-                )
-              }
-
-              {record.type === "SRV" && (
+            {
+              // Priority field if type = "MX"
+              record.type === "MX" && (
                 <>
-
-                    <label className="form-label" htmlFor="weight">
-                      Weight
-                      <input
-                        id="weight"
-                        type="number"
-                        min="0"
-                        placeholder="Weight"
-                        onChange={handleInputChange("weight")}
-                        value={record.weight}
-                      />
-                    </label>
-
-
-
-                    <label  className="form-label" htmlFor="port">
-                      Port
-                      <input
-                        id="port"
-                        type="number"
-                        min="0"
-                        placeholder="Port"
-                        onChange={handleInputChange("port")}
-                        value={record.port}
-                      />
-                    </label>
-
-
-                    <label className="form-label" htmlFor="target">
-                      Target
-                      <input
-                        id="target"
-                        placeholder="Target"
-                        onChange={handleInputChange("target")}
-                        value={record.target}
-                      />
-                    </label>
+                {/* <label className="form-label" htmlFor="priority">
+                  Priority
+                </label> */}
+                <Form.FloatingLabel>
+                  Priority
+                </Form.FloatingLabel>
+                  
+                  <Form.Control
+                    id="priority"
+                    type="number"
+                    min="0"
+                    max="65535"
+                    placeholder="0-65535"
+                    onChange={handleInputChange("priority")}
+                    onFocus={handleFocus}
+                    value={record?.priority}
+                  />
 
                 </>
-              )}
+
+
+              )
+            }
+
+            {record.type === "SRV" && (
+              <>
+                <label className="form-label" htmlFor="weight">
+                  Weight
+                  <input
+                    id="weight"
+                    type="number"
+                    min="0"
+                    placeholder="Weight"
+                    onChange={handleInputChange("weight")}
+                    value={record.weight}
+                  />
+                </label>
+
+                <label className="form-label" htmlFor="port">
+                  Port
+                  <input
+                    id="port"
+                    type="number"
+                    min="0"
+                    placeholder="Port"
+                    onChange={handleInputChange("port")}
+                    value={record.port}
+                  />
+                </label>
+
+                <label className="form-label" htmlFor="target">
+                  Target
+                  <input
+                    id="target"
+                    placeholder="Target"
+                    onChange={handleInputChange("target")}
+                    value={record.target}
+                  />
+                </label>
+              </>
+            )}
             {/* </div> */}
 
             <label htmlFor="Value" className="form-label">
