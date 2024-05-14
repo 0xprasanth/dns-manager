@@ -196,9 +196,13 @@ function UpdateFormModal({ recordToUpdate, rootDomain }) {
       //   setSuccess(false);
       //   return;
       // }
+      let subdomain = record.subdomain.split('.');
+
+      let newDomain = subdomain.length >= 1 ? `${record.subdomain}.${record.domain}` : `${subdomain}.${rootDomain.domain}`
+      console.log(domain);
 
       const filteredRecord = {
-        domain: `${record.subdomain}.${sub[0]}.${sub[1]}`,
+        domain: newDomain,
         ...record,
       };
       // let filteredRecord;
@@ -212,6 +216,11 @@ function UpdateFormModal({ recordToUpdate, rootDomain }) {
       // }
 
       console.log("filter records", filteredRecord);
+
+
+
+      console.log('record', record);
+
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/domain/records/${recordToUpdate._id}`,
         {
