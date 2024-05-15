@@ -7,6 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../components/Header";
 import AddDomain from "../components/Modal/AddDomain";
+import DataGrid from "../components/DataGrid";
 
 const Dashboard = () => {
   const [records, setRecords] = useState([]);
@@ -80,7 +81,7 @@ const Dashboard = () => {
           
         </div>
         <br />
-        <RecordsTable records={records} onDeleteRecord={handleDeleteRecord} />
+        <RecordsTable records={records}  />
       </div>
     </>
   );

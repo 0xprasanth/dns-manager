@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./updateForm.css";
 import Modal from "react-bootstrap/Modal";
-import { Form, InputGroup } from "react-bootstrap";
+import { Form, Image } from "react-bootstrap";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
@@ -285,10 +285,10 @@ function UpdateFormModal({ recordToUpdate, rootDomain }) {
 
   return (
     <>
-      <button className="update-button" onClick={handleShow}>
-        {" "}
-        Update{" "}
-      </button>
+      <Button className="update-button" variant="light"  onClick={handleShow}>
+
+      <Image rounded src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/pencil.svg" alt="pencil" width={25} height={25}  className="primary" />
+      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

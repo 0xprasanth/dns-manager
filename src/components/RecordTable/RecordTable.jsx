@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import FormModal from "../Modal";
 import UploadJsonForm from "../forms/UploadJsonForm";
-import { Breadcrumb } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
 
 const RecordsTable = ({ records, onDeleteRecord }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -125,12 +125,24 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
         <table className="records-table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th style={{
+                width: "18%"
+              }} >ID</th>
               <th>Name</th>
-              <th>Type</th>
-              <th>TTL</th>
-              <th>Value</th>
-              <th>Actions</th>
+
+              <th style={{
+                width:"10%"
+              }}>Type</th>
+              <th style={{
+                width:"10%"
+              }}> TTL</th>
+              <th style={{
+                width:"25%"
+              }}>Value</th>
+
+              <th style={{
+                width: "10%"
+              }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -150,12 +162,15 @@ const RecordsTable = ({ records, onDeleteRecord }) => {
                   } */}
                 </td>
                 <td>
-                  <button
+                  <Button
                     onClick={() => handleDeleteRecord(record)}
-                    className="delete-button"
+                    className="delete-button btn-danger white"
+                    // color="danger"
                   >
-                    Delete
-                  </button>
+                          <img src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/trash.svg" alt="trash-box" width={25} height={25} />
+                  </Button>
+
+
                   <UpdateFormModal recordToUpdate={record} rootDomain={records[0]} />
                 </td>
               </tr>

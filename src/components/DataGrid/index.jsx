@@ -5,7 +5,6 @@ import { useDNSRecords } from "../../hooks/useQueries";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import { Button } from "reactstrap";
-import { DataTableToolBar } from "./data-table-toolbar";
 
 const columns = [
   {
@@ -36,13 +35,18 @@ const columns = [
 	name: "",
 	button: "true",
 	cell: () =>
-	<Button color="warning" ><img src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/pencil.svg" alt="pencil" width={25} height={25}  /></Button>
+	<Button color="warning" >
+    <img src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/pencil.svg" alt="pencil" width={25} height={25}  />
+  </Button>
   },
   {
 	name: "",
 	button: "true",
 	cell: () =>(
-		<Button color="danger" ><img src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/trash.svg" alt="trash-box" width={25} height={25}  /></Button>),
+		<Button color="danger" >
+      <img src="https://raw.githubusercontent.com/ptech12/dns-manager/main/src/assets/trash.svg" alt="trash-box" width={25} height={25}  />
+    </Button>
+  ),
 
   },
 ];
