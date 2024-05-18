@@ -30,10 +30,11 @@ const Dashboard = () => {
           hostedZoneId: `${hzId}`
         }
       });
-      console.log(response.data);
+      // console.log(response.data);
+      console.table(response.data.data)
 
       setRecords(response.data.data);
-      console.log(records);
+
     } catch (error) {
       console.error("Error fetching DNS records:", error);
     }

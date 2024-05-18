@@ -31,7 +31,6 @@ function FormModal({ rootDomain }) {
     digest: "",
   });
 
-  console.log(rootDomain);
   const [placeholder, setPlaceholder] = useState("");
 
   const accessToken = Cookies.get("token").toString();
